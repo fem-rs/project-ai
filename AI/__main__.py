@@ -1,15 +1,15 @@
 from milc import cli
 
+from AI.src.train import train_ai
+
 @cli.entrypoint("Entrypoint")
 def main(cli):
     cli.log.info('No subcommand specified!')
     cli.print_usage()
 
-@cli.argument('-m', '--model', help='File name for model to be saved as', default='alz_model.keras')
-@cli.subcommand('Train AI.')
+@cli.subcommand('Train AI and save it to a file.')
 def train(cli):
-    cli.echo(cli.config.train.model)
-
+    train_ai()
 
 if __name__ == '__main__':
     cli()
