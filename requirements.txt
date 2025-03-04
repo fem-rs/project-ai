@@ -1,0 +1,12 @@
+# CLI stuff
+milc
+
+# Data stuff
+scikit-learn
+
+# Ai stuff
+tensorflow
+keras
+
+# etc
+pathlib

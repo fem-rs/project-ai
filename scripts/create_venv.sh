@@ -3,7 +3,7 @@
 current_dir=$PWD
 script_dir=$(dirname "$(readlink -f "$0")")
 
-venv_name="env"
+venv_name=".venv"
 venv_dir=$current_dir/$venv_name
 
 if [ $(dirname "$(readlink -f "$0")") == $PWD ]; then
