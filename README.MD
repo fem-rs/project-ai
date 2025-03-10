@@ -17,6 +17,7 @@ Setting up the venv
 Using the venv to run the project
     
     $ . .venv/Scripts/activate.bat
+    $ py -m AI
 
 ## Authors
 
