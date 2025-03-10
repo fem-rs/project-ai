@@ -19,8 +19,8 @@ fi
 echo $OSTYPE
 
 if [[ "$OSTYPE" == "msys"* ]]; then
-    . env/Scripts/activate
+    . $venv_name/Scripts/activate
 else 
-    source env/bin/activate
+    source $venv_name/bin/activate
 fi
 pip install -r $current_dir/requirements.txt
