@@ -16,7 +16,7 @@ Setting up the venv
 
 Using the venv to run the project
     
-    $ ./.venv/Scripts/activate.bat
+    $ . .venv/Scripts/activate.bat
 
 ## Authors
 
