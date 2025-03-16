@@ -46,11 +46,17 @@ def handle_image(file):
     image = image / 255.0
     return image
 
+data_augmentation = Sequential([
+    layers.RandomFlip("horizontal_and_vertical"),
+    layers.RandomRotation(0.2),
+    layers.RandomZoom(0.2),
+])
+
 def train_ai():
     data_dir = Path(f'{os.getcwd()!s}\\Data')
     
     categories, labels, files = load_data(data_dir)
-    
+
     x_train, x_test, y_train, y_test = train_test_split(
         files, labels, test_size=0.2, random_state=42, stratify=labels
     )
