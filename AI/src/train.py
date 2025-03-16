@@ -22,13 +22,20 @@ img_width = 300
 
 def load_data(data_directory):
     categories, labels, files = [], [], []
+
+    data_path = Path(data_directory).resolve(strict=True)
     
-    for child in data_directory.iterdir():
-        categories.append(str(child).removeprefix(f'{os.getcwd()}\\Data\\'))
+    for child in data_path.iterdir():
+        if child.is_dir():
+            categories.append(child.name)
+
+    for file in data_path.rglob("*.*"):
+        category = file.relative_to(data_path).parts[0] if file.relative_to(data_path).parts else None
+        label = categories.index(category)
         
-    for file in Path(f"{os.getcwd()}\\Data").glob("**/*"):
-        files.append(str(file))
-        labels.append(categories.index(str(file).removeprefix(f'{os.getcwd()!s}\\Data\\').split('\\')[0]))
+        if label is not None:
+            files.append(str(file.resolve()))
+            labels.append(label)
         
     return (categories, labels, files) 
 
@@ -38,13 +45,12 @@ def handle_image(file):
     image = tf.image.resize(image, [img_height, img_width])
     image = image / 255.0
     return image
-     
 
 def train_ai():
     data_dir = Path(f'{os.getcwd()!s}\\Data')
     
     categories, labels, files = load_data(data_dir)
-     
+    
     x_train, x_test, y_train, y_test = train_test_split(
         files, labels, test_size=0.2, random_state=42, stratify=labels
     )

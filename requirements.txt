@@ -5,7 +5,7 @@ milc
 scikit-learn
 
 # Ai stuff
-tensorflow
+tensorflow<2.11
 keras
 
 # etc
