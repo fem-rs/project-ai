@@ -89,8 +89,12 @@ def train_ai():
         layers.Dense(128, activation='relu'),
         layers.Dense(len(categories))
     ])
+
+    lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+        0.001, decay_steps=1000, decay_rate=0.9, staircase=True
+    )
     
-    model.compile(optimizer=Adam(learning_rate=0.001),
+    model.compile(optimizer=Adam(learning_rate=lr_schedule),
               loss='categorical_crossentropy',
               metrics=['accuracy', 'precision'])
 
