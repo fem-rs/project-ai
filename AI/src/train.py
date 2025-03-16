@@ -77,6 +77,7 @@ def train_ai():
     
     model = Sequential([
         layers.Input(shape=(img_height, img_width, 3)),
+        data_augmentation,
         layers.Conv2D(32, (3, 3), activation='relu'),
         layers.Conv2D(16, 3, padding='same', activation='relu'),
         layers.MaxPooling2D(),
