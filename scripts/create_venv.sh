@@ -13,7 +13,7 @@ fi
 
 if [ ! -d $venv_dir ]; then
     echo "[+] Virtual enviroment doesn't exist, creating one..."
-    python -m venv $venv_dir
+    python3 -m venv $venv_dir
 fi
 
 echo $OSTYPE

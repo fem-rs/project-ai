@@ -1,5 +1,3 @@
-# references: https://www.tensorflow.org/tutorials/images/classification
-
 import os
 from pathlib import Path
 
@@ -8,27 +6,37 @@ from sklearn.preprocessing import LabelBinarizer
 
 import tensorflow as tf
 
+from keras.applications import ResNet50 
 from keras.optimizers import Adam   # type: ignore
 from keras.models import Sequential # type: ignore
 from keras import layers
 
+import pandas as pd
+
 import numpy
 
-epochs = 10
-batch_size = 32
-img_height = 300
-img_width = 300
+epochs = 5
+batch_size = 64
+img_height = 256
+img_width = 256
 
 
 def load_data(data_directory):
     categories, labels, files = [], [], []
+
+    data_path = Path(data_directory).resolve(strict=True)
     
-    for child in data_directory.iterdir():
-        categories.append(str(child).removeprefix(f'{os.getcwd()}\\Data\\'))
+    for child in data_path.iterdir():
+        if child.is_dir():
+            categories.append(child.name)
+
+    for file in data_path.rglob("*.*"):
+        category = file.relative_to(data_path).parts[0] if file.relative_to(data_path).parts else None
+        label = categories.index(category)
         
-    for file in Path(f"{os.getcwd()}\\Data").glob("**/*"):
-        files.append(str(file))
-        labels.append(categories.index(str(file).removeprefix(f'{os.getcwd()!s}\\Data\\').split('\\')[0]))
+        if label is not None:
+            files.append(str(file.resolve()))
+            labels.append(label)
         
     return (categories, labels, files) 
 
@@ -38,13 +46,18 @@ def handle_image(file):
     image = tf.image.resize(image, [img_height, img_width])
     image = image / 255.0
     return image
-     
+
+data_augmentation = Sequential([
+    layers.RandomFlip("horizontal_and_vertical"),
+    layers.RandomRotation(0.2),
+    layers.RandomZoom(0.2),
+])
 
 def train_ai():
-    data_dir = Path(f'{os.getcwd()!s}\\Data')
+    data_dir = Path(f'{os.getcwd()!s}/Data')
     
     categories, labels, files = load_data(data_dir)
-     
+
     x_train, x_test, y_train, y_test = train_test_split(
         files, labels, test_size=0.2, random_state=42, stratify=labels
     )
@@ -63,23 +76,22 @@ def train_ai():
     train_dataset = train_dataset.shuffle(buffer_size=1000).batch(batch_size).prefetch(tf.data.AUTOTUNE)
     test_dataset = test_dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
     
+    base_model = ResNet50(weights='imagenet', include_top=False, input_shape=(img_height, img_width, 3))
+
+    base_model.trainable = False
+
     model = Sequential([
         layers.Input(shape=(img_height, img_width, 3)),
-        layers.Conv2D(32, (3, 3), activation='relu'),
-        layers.Conv2D(16, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Conv2D(32, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Conv2D(64, 3, padding='same', activation='relu'),
-        layers.MaxPooling2D(),
-        layers.Flatten(),
+        data_augmentation,
+        base_model,
+        layers.GlobalAveragePooling2D(),
         layers.Dense(128, activation='relu'),
-        layers.Dense(len(categories))
+        layers.Dense(len(categories), activation='softmax')
     ])
     
     model.compile(optimizer=Adam(learning_rate=0.001),
-              loss='categorical_crossentropy',
-              metrics=['accuracy', 'precision'])
+        loss='categorical_crossentropy',
+        metrics=['accuracy', 'precision'])
 
     history = model.fit(
         train_dataset,
@@ -88,5 +100,7 @@ def train_ai():
     )
     
     print(model.summary())
-
+    
+    pd.DataFrame.from_dict(history.history).to_csv('history.csv', index=False)
+    
     model.save("alzheimers.keras")

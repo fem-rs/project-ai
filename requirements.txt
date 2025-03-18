@@ -5,8 +5,11 @@ milc
 scikit-learn
 
 # Ai stuff
-tensorflow
+"tensorflow<2.11" 
 keras
 
-# etc
+# Graphing
+matplotlib
+
+# etc (rawr x3)
 pathlib
