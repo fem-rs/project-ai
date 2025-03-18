@@ -103,4 +103,4 @@ def train_ai():
     
     pd.DataFrame.from_dict(history.history).to_csv('history.csv', index=False)
     
-    model.save("alzheimers.keras")
+    model.save("alzheimers_res.keras")

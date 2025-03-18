@@ -3,9 +3,11 @@ milc
 
 # Data stuff
 scikit-learn
+scikit-image
+pandas
 
 # Ai stuff
-"tensorflow<2.11" 
+tensorflow
 keras
 
 # Graphing
