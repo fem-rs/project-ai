@@ -16,7 +16,7 @@ import pandas as pd
 import numpy
 
 epochs = 5
-batch_size = 64
+batch_size = 32
 img_height = 256
 img_width = 256
 
