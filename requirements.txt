@@ -8,6 +8,7 @@ pandas
 
 # Ai stuff
 tensorflow
+imblearn
 keras
 
 # Graphing
