@@ -50,7 +50,6 @@ data_augmentation = Sequential([
     layers.RandomRotation(0.2),
 ])
 
-
 def train_ai():
     data_dir = Path(f'{os.getcwd()}/Data') # Not cross-platform friendly, should probably change
 

@@ -14,7 +14,7 @@ def handle_image(file):
     return image
 
 # Testing on a Single Image
-test_image_path = str(Path('/home/evie/project-ai/Data/Moderate Dementia/OAS1_0308_MR1_mpr-1_105.jpg'))
+test_image_path = str(Path(os.getcwd() + '/Data/Moderate Dementia/OAS1_0308_MR1_mpr-1_105.jpg'))
 test_image = handle_image(test_image_path)
 test_image = tf.expand_dims(test_image, axis=0)  # Adding batch dimension
 
